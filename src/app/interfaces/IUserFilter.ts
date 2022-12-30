@@ -1,4 +1,4 @@
 export interface IUserFilter {
-    username: string,
-    email: string
+    username?: string,
+    email?: string
 }

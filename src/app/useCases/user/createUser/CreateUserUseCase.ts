@@ -1,3 +1,4 @@
+import { BadRequestError } from "../../../errors/BadRequestError";
 import { IUserRepository } from "../../../repositories/IUserRepository";
 import { ICreateUserDTO } from "./CreateUserDTO";
 
@@ -6,10 +7,10 @@ export class CreateUserUseCase {
 
     async execute(data: ICreateUserDTO) {
         const {email, username} = data
-        const userAlreadyExists = await this.userRepository.find({username, email})
+        const userAlreadyExists = await this.userRepository.findByFilter({username, email})
 
         if(userAlreadyExists.length > 0) {
-            throw new Error('User already exists')
+            throw new BadRequestError('User already exists')
         }
 
         await this.userRepository.save(data)
