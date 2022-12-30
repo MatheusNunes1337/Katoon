@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { IUser } from '../../app/interfaces/IUser';
-import { IUserFilter } from '../../app/interfaces/IUserFilter';
+import { IUser } from '../../interfaces/IUser';
+import { IUserFilter } from '../../interfaces/IUserFilter';
 import { ICreateUserDTO } from "../../useCases/user/createUser/CreateUserDTO"
 import { IUserRepository } from "../IUserRepository";
 
@@ -13,8 +13,16 @@ export class UserRepository implements IUserRepository {
         })
     }
 
-    async find(filter?: IUserFilter) {
-        return await prisma.users.findMany({where: filter}) 
+    async find() {
+        return await prisma.users.findMany()     
+    }
+
+    async findByFilter(filter?: IUserFilter) {
+        return await prisma.users.findMany({where: 
+            {
+                OR: [{username: filter?.username}, {email: filter?.email}, {}]
+            }    
+        }) 
     }
 
     async findById(id: number) {
