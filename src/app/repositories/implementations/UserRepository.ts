@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { IUser } from '../../interfaces/IUser';
 import { IUserFilter } from '../../interfaces/IUserFilter';
 import { ICreateUserDTO } from "../../useCases/user/createUser/CreateUserDTO"
-import { IUpdateUserDTO } from '../../useCases/user/updateUser/UpdateUserUseCase';
+import { IUpdateUserDTO } from '../../useCases/user/updateUser/UpdateUserDTO';
 import { IUserRepository } from "../IUserRepository";
 
 const prisma = new PrismaClient()
@@ -21,17 +21,17 @@ export class UserRepository implements IUserRepository {
     async findByFilter(filter?: IUserFilter) {
         return await prisma.users.findMany({where: 
             {
-                OR: [{username: filter?.username}, {email: filter?.email}, {}]
-            }    
+                OR: [{username: filter?.username}, {email: filter?.email}]
+            }, select: {username: true, email: true, notes: true}    
         }) 
     }
 
     async findById(id: number) {
-        return await prisma.users.findUnique({where: {id: id}})
+        return await prisma.users.findUnique({where: {id: id}, select: {username: true, email: true, notes: true} })
     }
 
     async update(payload: IUpdateUserDTO, id: number) {
-        return await prisma.users.update({data: payload, where: {id: id}, select: {password: false}})
+        return await prisma.users.update({where: {id: id}, data: payload, select: {username: true, email: true, notes: true}})
     }
 
     async delete(id: number): Promise<void> {

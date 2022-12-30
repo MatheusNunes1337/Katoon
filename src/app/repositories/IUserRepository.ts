@@ -1,7 +1,7 @@
 import { IUser } from "../interfaces/IUser"
 import { IUserFilter } from "../interfaces/IUserFilter"
 import { ICreateUserDTO } from "../useCases/user/createUser/CreateUserDTO"
-import { IUpdateUserDTO } from "../useCases/user/updateUser/UpdateUserUseCase"
+import { IUpdateUserDTO } from "../useCases/user/updateUser/UpdateUserDTO"
 
 export interface IUserRepository {
     save(user: ICreateUserDTO): Promise<void>
