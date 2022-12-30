@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { IUser } from '../../interfaces/IUser';
 import { IUserFilter } from '../../interfaces/IUserFilter';
 import { ICreateUserDTO } from "../../useCases/user/createUser/CreateUserDTO"
+import { IUpdateUserDTO } from '../../useCases/user/updateUser/UpdateUserUseCase';
 import { IUserRepository } from "../IUserRepository";
 
 const prisma = new PrismaClient()
@@ -29,9 +30,8 @@ export class UserRepository implements IUserRepository {
         return await prisma.users.findUnique({where: {id: id}})
     }
 
-    async update(payload: IUser, id: number) {
-        //return await prisma.users.update({data: payload, where: {id: id}})
-        return true
+    async update(payload: IUpdateUserDTO, id: number) {
+        return await prisma.users.update({data: payload, where: {id: id}, select: {password: false}})
     }
 
     async delete(id: number): Promise<void> {
