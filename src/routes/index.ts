@@ -3,6 +3,6 @@ import { userRoute } from "./users.routes";
 
 const routes = Router()
 
-routes.use('api/v1/users', userRoute)
+routes.use('/api/v1/users', userRoute)
 
 export {routes}
