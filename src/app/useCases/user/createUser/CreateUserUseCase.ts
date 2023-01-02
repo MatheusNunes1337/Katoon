@@ -1,3 +1,4 @@
+import * as bcrypt from "bcrypt";
 import { BadRequestError } from "../../../errors/BadRequestError";
 import { IUserRepository } from "../../../repositories/IUserRepository";
 import { ICreateUserDTO } from "./CreateUserDTO";
@@ -13,6 +14,9 @@ export class CreateUserUseCase {
             throw new BadRequestError('User already exists')
         }
 
-        await this.userRepository.save(data)
+        const salt = await bcrypt.genSalt(10)
+        const password = await bcrypt.hash(data.password, salt)
+
+        await this.userRepository.save({...data, password})
     }
 }
