@@ -7,6 +7,12 @@ import { IUserRepository } from "../IUserRepository";
 
 const prisma = new PrismaClient()
 
+const selectedFields = {
+    username: true, 
+    email: true, 
+    notes: true
+}
+
 export class UserRepository implements IUserRepository {
     async save(user: ICreateUserDTO): Promise<void> {
         await prisma.users.create({
@@ -15,23 +21,23 @@ export class UserRepository implements IUserRepository {
     }
 
     async find() {
-        return await prisma.users.findMany()     
+        return await prisma.users.findMany({select: selectedFields})     
     }
 
     async findByFilter(filter?: IUserFilter) {
         return await prisma.users.findMany({where: 
             {
                 OR: [{username: filter?.username}, {email: filter?.email}]
-            }, select: {username: true, email: true, notes: true}    
+            }, select: selectedFields    
         }) 
     }
 
     async findById(id: number) {
-        return await prisma.users.findUnique({where: {id: id}, select: {username: true, email: true, notes: true} })
+        return await prisma.users.findUnique({where: {id: id}, select: selectedFields })
     }
 
     async update(payload: IUpdateUserDTO, id: number) {
-        return await prisma.users.update({where: {id: id}, data: payload, select: {username: true, email: true, notes: true}})
+        return await prisma.users.update({where: {id: id}, data: payload, select: selectedFields})
     }
 
     async delete(id: number): Promise<void> {
